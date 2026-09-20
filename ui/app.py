@@ -54,11 +54,11 @@ st.markdown("""
 /* ---------- GLOBAL ---------- */
 
 .stApp {
-    background-color: #F6F9FD;
+    background-color: #f3f6fa;
 }
 
 [data-testid="stHeader"] {
-    background-color: #F6F9FD;
+    background-color: #f3f6fa;
 }
 
 .block-container {
@@ -147,7 +147,7 @@ h1, h2, h3, p {
 
 .page-subtitle {
     font-size: 15px;
-    color: #7B8BA3 !important;
+    color: #64748B !important;
     margin-bottom: 28px;
 }
 
@@ -208,10 +208,11 @@ h1, h2, h3, p {
 
 .section-card {
     background-color: #FFFFFF;
-    border: 1px solid #DFE7F2;
+    border: 1px solid #D9E2EF;
     border-radius: 14px;
     padding: 20px;
     margin-top: 22px;
+    box-shadow: 0 2px 8px rgba(23, 32, 51, 0.04);
 }
 
 .section-header {
@@ -378,7 +379,7 @@ h1, h2, h3, p {
 
 .stButton > button {
     border-radius: 8px;
-    border: 1px solid #D6E0ED;
+    border: 1px solid #C9D6E6;
     background-color: #FFFFFF;
     color: #2563EB !important;
     font-weight: 600;
@@ -683,6 +684,99 @@ h1, h2, h3, p {
     color: #64748B !important;
     font-weight: 600 !important;
 }
+
+/* ---------- POLISHED BUTTONS ---------- */
+
+.stButton > button {
+    border-radius: 8px !important;
+    border: 1px solid #D6E0ED !important;
+    background: #FFFFFF !important;
+    color: #2563EB !important;
+    font-weight: 600 !important;
+    min-height: 38px !important;
+    transition: all 0.15s ease;
+}
+
+.stButton > button:hover {
+    border-color: #2563EB !important;
+    background: #F8FBFF !important;
+}
+
+
+/* ---------- BORDERED STREAMLIT CONTAINERS ---------- */
+
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: #FFFFFF;
+    border-color: #E2E8F0 !important;
+    border-radius: 12px !important;
+}
+
+
+/* ---------- CONSISTENT BODY TEXT ---------- */
+
+body {
+    color: #172033;
+}
+
+
+/* ---------- SMALL SECTION LABEL ---------- */
+
+.eyebrow {
+    color: #64748B;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.contract-name {
+    color: #172033;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.contract-meta {
+    color: #64748B;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.contract-parties {
+    color: #94A3B8;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    padding: 4px !important;
+}
+
+/* Obligation cards */
+div[class*="st-key-obligation_card_"] {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 14px !important;
+    padding: 18px 20px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Contract cards */
+div[class*="st-key-contract_card_"] {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 14px !important;
+    padding: 18px 20px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+}
+
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -1043,7 +1137,9 @@ elif st.session_state.page == "Contracts":
 
     for contract in filtered_contracts:
 
-        with st.container(border=True):
+        with st.container(
+            key=f"contract_card_{contract['name']}"
+        ):
 
             col1, col2 = st.columns([6, 1])
 
@@ -1236,7 +1332,9 @@ elif st.session_state.page == "Obligations":
         ):
             continue
 
-        with st.container(border=True):
+        with st.container(
+            key=f"obligation_card_{item['obligation']}"
+        ):
 
             col1, col2 = st.columns([5, 1])
 
@@ -1270,8 +1368,18 @@ elif st.session_state.page == "Obligations":
 
                     <div style="
                         display:inline-block;
-                        background:#F1F5F9;
-                        color:#475569;
+                        background:{
+                            '#EFF6FF' if item['status'] == 'Ongoing'
+                            else '#FFF7ED' if item['status'] == 'Due Soon'
+                            else '#FEF2F2' if item['status'] == 'Overdue'
+                            else '#F1F5F9'
+                        };
+                        color:{
+                            '#2563EB' if item['status'] == 'Ongoing'
+                            else '#C2410C' if item['status'] == 'Due Soon'
+                            else '#B91C1C' if item['status'] == 'Overdue'
+                            else '#475569'
+                        };
                         padding:4px 9px;
                         border-radius:20px;
                         font-size:11px;
@@ -2835,13 +2943,30 @@ if st.session_state.page == "Dashboard":
         """, unsafe_allow_html=True)
 
 
+st.markdown(
+    '<div style="height:18px;"></div>',
+    unsafe_allow_html=True
+)
 # ============================================================
 # NEEDS ATTENTION
 # ============================================================
 
 if st.session_state.page == "Dashboard":
     # ---------- NEEDS ATTENTION ----------
-    st.subheader("Needs Attention")
+    st.markdown(
+    """
+    <div style="
+        color:#172033;
+        font-size:22px;
+        font-weight:700;
+        margin-top:10px;
+        margin-bottom:18px;
+    ">
+        Needs Attention
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
     attention_col1, attention_col2 = st.columns(2)
 
@@ -2867,8 +2992,10 @@ if st.session_state.page == "Dashboard":
             unsafe_allow_html=True,
         )
 
-    st.write("")
-
+    st.markdown(
+    '<div style="height:24px;"></div>',
+    unsafe_allow_html=True
+)
 
     # ---------------- UPCOMING ----------------
 
@@ -2884,9 +3011,15 @@ if st.session_state.page == "Dashboard":
             unsafe_allow_html=True
         )
 
-        for item in upcoming:
+        for index, item in enumerate(upcoming):
 
-            col1, col2, col3 = st.columns([1, 6, 1])
+            if index > 0:
+                st.markdown(
+                    '<div style="height:14px;"></div>',
+                    unsafe_allow_html=True
+                )
+
+            col1, col2, col3 = st.columns([1, 6, 1], vertical_alignment="center")
 
             with col1:
                 date_parts = item["date"].split()
@@ -2934,10 +3067,15 @@ if st.session_state.page == "Dashboard":
             unsafe_allow_html=True
         )
 
-        for item in reviews:
+        for index, item in enumerate(reviews):
 
-            col1, col2 = st.columns([5, 1])
+            if index > 0:
+                st.markdown(
+                    '<div style="height:14px;"></div>',
+                    unsafe_allow_html=True
+                )
 
+            col1, col2 = st.columns([7, 1], vertical_alignment="center")
             with col1:
                 st.markdown(
                     f"""

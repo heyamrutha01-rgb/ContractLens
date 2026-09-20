@@ -1162,20 +1162,22 @@ elif st.session_state.page == "Contracts":
 
     st.write()
 
-    contracts = [
-        {
-            "name": "Acme Master Agreement",
-            "type": "Service Agreement",
-            "parties": "Acme Corp ↔ Vendor X",
-            "status": "Active",
-        },
-        {
-            "name": "XYZ Vendor Agreement",
-            "type": "Vendor Agreement",
-            "parties": "XYZ Corp ↔ Acme Corp",
-            "status": "Active",
-        },
-    ]
+    analysis = st.session_state.get("contract_analysis")
+
+    if analysis:
+        info = analysis.get("contract_info", {})
+        parties = info.get("parties", [])
+
+        contracts = [
+            {
+                "name": info.get("contract_type", "Uploaded Contract"),
+                "type": info.get("contract_type", "Contract"),
+                "parties": " ↔ ".join(parties) if parties else "Parties not specified",
+                "status": "Analyzed",
+            }
+        ]
+    else:
+        contracts = []
 
     search_term = search.strip().lower()
 
@@ -2917,7 +2919,7 @@ elif st.session_state.page == "Contract Overview":
 
 
 # ============================================================
-# DASHBOARD
+# BOARD
 # ============================================================
 
 else:

@@ -2312,267 +2312,145 @@ else:
 # ============================================================
 
 if st.session_state.page == "Dashboard":
-    col1, col2, col3 = st.columns(3)
 
-    with col1:
-        st.markdown("""
-        <div class="metric-card">
-            <div class="metric-top">
-                <div class="metric-icon blue-icon">📅</div>
-                <div class="metric-label">Due Soon</div>
-            </div>
-            <div class="metric-number">3</div>
-        </div>
-        """, unsafe_allow_html=True)
+    analysis = st.session_state.get("contract_analysis")
 
-    with col2:
-        st.markdown("""
-        <div class="metric-card">
-            <div class="metric-top">
-                <div class="metric-icon green-icon">↻</div>
-                <div class="metric-label">Renewals</div>
-            </div>
-            <div class="metric-number">2</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col3:
-        st.markdown("""
-        <div class="metric-card">
-            <div class="metric-top">
-                <div class="metric-icon purple-icon">⚠</div>
-                <div class="metric-label">Review</div>
-            </div>
-            <div class="metric-number">3</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-
-st.markdown(
-    '<div style="height:18px;"></div>',
-    unsafe_allow_html=True
-)
-# ============================================================
-# NEEDS ATTENTION
-# ============================================================
-
-if st.session_state.page == "Dashboard":
-    # ---------- NEEDS ATTENTION ----------
-    st.markdown(
-    """
-    <div style="
-        color:#172033;
-        font-size:22px;
-        font-weight:700;
-        margin-top:10px;
-        margin-bottom:18px;
-    ">
-        Needs Attention
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-    attention_col1, attention_col2 = st.columns(2)
-
-    with attention_col1:
+    if not analysis:
         st.markdown(
-            """
-            <div class="attention-card blue-card">
-                <div class="attention-title">3 obligations due soon</div>
-                <div class="attention-text">The next deadline is Sep 22.</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
+            '<div class="page-title">Dashboard</div>',
+            unsafe_allow_html=True
         )
 
-    with attention_col2:
         st.markdown(
-            """
-            <div class="attention-card yellow-card">
-                <div class="attention-title">3 clauses require attention</div>
-                <div class="attention-text">Review flagged contract sections.</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
+            '<div class="page-subtitle">Your contracts, obligations, and upcoming deadlines.</div>',
+            unsafe_allow_html=True
         )
 
-    st.markdown(
-    '<div style="height:24px;"></div>',
-    unsafe_allow_html=True
-)
+        st.info("Upload and analyze a contract to populate your ContractLens dashboard.")
 
-    # ---------------- UPCOMING ----------------
-
-    with st.container(border=True):
+    else:
+        info = analysis.get("contract_info", {})
+        obligations = analysis.get("obligations", [])
+        review_items = analysis.get("review_items", [])
 
         st.markdown(
-            """
-            <div class="section-title">
-                <span class="section-icon">◉</span>
-                Upcoming
+            '<div class="page-title">Dashboard</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            '<div class="page-subtitle">Your contracts, obligations, and upcoming deadlines.</div>',
+            unsafe_allow_html=True
+        )
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.markdown(
+                f"""
+                <div class="metric-card">
+                    <div class="metric-top">
+                        <div class="metric-icon blue-icon">📅</div>
+                        <div class="metric-label">Obligations</div>
+                    </div>
+                    <div class="metric-number">{len(obligations)}</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with col2:
+            st.markdown(
+                f"""
+                <div class="metric-card">
+                    <div class="metric-top">
+                        <div class="metric-icon green-icon">↻</div>
+                        <div class="metric-label">Renewal</div>
+                    </div>
+                    <div class="metric-number">1</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with col3:
+            st.markdown(
+                f"""
+                <div class="metric-card">
+                    <div class="metric-top">
+                        <div class="metric-icon purple-icon">⚠</div>
+                        <div class="metric-label">Review</div>
+                    </div>
+                    <div class="metric-number">{len(review_items)}</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        st.markdown('<div style="height:24px;"></div>', unsafe_allow_html=True)
+
+        st.markdown(
+            '<div class="section-title">NEEDS ATTENTION</div>',
+            unsafe_allow_html=True
+        )
+
+        attention_col1, attention_col2 = st.columns(2)
+
+        with attention_col1:
+            st.markdown(
+                f"""
+                <div class="attention-card blue-card">
+                    <div class="attention-title">
+                        {len(obligations)} obligations identified
+                    </div>
+                    <div class="attention-text">
+                        Review the obligation timeline for upcoming commitments.
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with attention_col2:
+            st.markdown(
+                f"""
+                <div class="attention-card yellow-card">
+                    <div class="attention-title">
+                        {len(review_items)} clauses require attention
+                    </div>
+                    <div class="attention-text">
+                        Human review recommended for flagged clauses.
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        st.markdown('<div style="height:24px;"></div>', unsafe_allow_html=True)
+
+        st.markdown(
+            '<div class="section-title">CONTRACT</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f"""
+            <div class="metric-card">
+                <div style="color:#172033;font-size:17px;font-weight:700;">
+                    {info.get("contract_type", "Uploaded Contract")}
+                </div>
+                <div style="color:#64748B;font-size:13px;margin-top:6px;">
+                    {" ↔ ".join(info.get("parties", [])) or "Parties not specified"}
+                </div>
+                <div style="color:#64748B;font-size:13px;margin-top:5px;">
+                    Effective: {info.get("effective_date", "Not specified")}
+                    · Expires: {info.get("expiration_date", "Not specified")}
+                </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-        for index, item in enumerate(upcoming):
-
-            if index > 0:
-                st.markdown(
-                    '<div style="height:14px;"></div>',
-                    unsafe_allow_html=True
-                )
-
-            col1, col2, col3 = st.columns([1, 6, 1], vertical_alignment="center")
-
-            with col1:
-                date_parts = item["date"].split()
-
-                st.markdown(
-                    f"""
-                    <div class="date-box">
-                        <div class="date-day">{date_parts[1]}</div>
-                        <div class="date-month">{date_parts[0].upper()}</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-            with col2:
-                st.markdown(
-                    f"""
-                    <div style="padding-top:5px;">
-                        <div class="upcoming-title">{item["title"]}</div>
-                        <div class="upcoming-details">{item["details"]}</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-            with col3:
-                if st.button(
-                    "View",
-                    key=f"upcoming_{item['title']}"
-                ):
-                    st.session_state.dashboard_source = item
-                    st.rerun()
-
-    # ---------------- REVIEW ----------------
-
-    with st.container(border=True):
-
-        st.markdown(
-            """
-            <div class="section-title">
-                <span class="section-icon">⚠</span>
-                Review
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        for index, item in enumerate(reviews):
-
-            if index > 0:
-                st.markdown(
-                    '<div style="height:14px;"></div>',
-                    unsafe_allow_html=True
-                )
-
-            col1, col2 = st.columns([7, 1], vertical_alignment="center")
-            with col1:
-                st.markdown(
-                    f"""
-                    <div class="review-content">
-                        <div class="review-title">{item["title"]}</div>
-                        <div class="review-details">
-                            {item["contract"]} · {item["section"]}
-                        </div>
-                        <div style="
-                            color:#B45309;
-                            font-size:12px;
-                            margin-top:7px;
-                        ">
-                            Human review recommended
-                        </div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-            with col2:
-                if st.button(
-                    "View",
-                    key=f"review_{item['title']}"
-                ):
-                    st.session_state.dashboard_source = item
-                    st.rerun()
-
-
-    # ============================================================
-# DASHBOARD SOURCE
-# ============================================================
-
-if st.session_state.dashboard_source is not None:
-
-    source = st.session_state.dashboard_source
-
-    st.html(
-        f"""
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #DFE7F2;
-            border-radius:12px;
-            padding:20px;
-            margin-top:20px;
-        ">
-
-            <div style="
-                color:#2563EB;
-                font-size:12px;
-                font-weight:700;
-            ">
-                SOURCE
-            </div>
-
-            <div style="
-                color:#172033;
-                font-size:15px;
-                font-weight:700;
-                margin-top:6px;
-            ">
-                Acme Master Agreement
-            </div>
-
-            <div style="
-                color:#64748B;
-                font-size:12px;
-                margin-top:5px;
-            ">
-                §12.1 — Renewal · Page 18
-            </div>
-
-            <div style="
-                color:#475569;
-                font-size:14px;
-                line-height:1.7;
-                margin-top:15px;
-            ">
-                Supporting contract content for:
-                <strong>{source["title"]}</strong>
-            </div>
-
-        </div>
-        """
-    )
-
-    if st.button(
-        "Close Source",
-        key="close_dashboard_source"
-    ):
-        st.session_state.dashboard_source = None
-        st.rerun()
 # ============================================================
 # FOOTER
 # ============================================================

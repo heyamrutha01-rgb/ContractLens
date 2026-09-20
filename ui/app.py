@@ -1947,848 +1947,118 @@ elif st.session_state.page == "Review":
 elif st.session_state.page == "Compare":
 
     st.markdown(
-        '<div class="page-title">Compare</div>',
+        '<div class="page-title">Compare Contracts</div>',
         unsafe_allow_html=True
     )
 
     st.markdown(
-        '<div class="page-subtitle">Compare two versions of a contract and identify what changed.</div>',
+        '<div class="page-subtitle">Compare two versions of a contract and identify important changes.</div>',
         unsafe_allow_html=True
     )
 
-    # --------------------------------------------------------
-    # CONTRACT SELECTOR
-    # --------------------------------------------------------
-
-    contract_compare = st.selectbox(
-        "Contract",
-        [
-            "Acme Master Agreement",
-            "XYZ Vendor Agreement"
-        ],
-        key="compare_contract"
+    st.markdown(
+        '<div class="section-title" style="margin-top:25px;">CONTRACT COMPARISON</div>',
+        unsafe_allow_html=True
     )
 
-    st.write("")
-
-    # --------------------------------------------------------
-    # VERSION UPLOADS
-    # --------------------------------------------------------
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-
-        st.markdown(
-            """
-            <div class="upload-section-label">
-                Version 1
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        version_1 = st.file_uploader(
-            "Upload Version 1",
-            type=["pdf"],
-            key="compare_version_1"
-        )
-
-        if version_1:
-
-            st.markdown(
-                f"""
-                <div class="file-row">
-                    <span>□</span>
-                    <span>{version_1.name}</span>
-                    <span class="file-check">✓</span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-    with col2:
-
-        st.markdown(
-            """
-            <div class="upload-section-label">
-                Version 2
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        version_2 = st.file_uploader(
-            "Upload Version 2",
-            type=["pdf"],
-            key="compare_version_2"
-        )
-
-        if version_2:
-
-            st.markdown(
-                f"""
-                <div class="file-row">
-                    <span>□</span>
-                    <span>{version_2.name}</span>
-                    <span class="file-check">✓</span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-    st.write("")
-
-    # --------------------------------------------------------
-    # COMPARE BUTTON
-    # --------------------------------------------------------
-
-    if st.button("Compare", key="run_compare"):
-
-        if version_1 is None or version_2 is None:
-
-            st.warning(
-                "Please upload both contract versions first."
-            )
-
-        else:
-
-            st.session_state.compare_result = True
-            st.session_state.compare_source = None
-            st.rerun()
-
-    # --------------------------------------------------------
-    # COMPARISON RESULTS
-    # --------------------------------------------------------
-
-    if st.session_state.compare_result:
+    with st.container(border=True):
 
         st.markdown(
             """
             <div style="
-                margin-top:30px;
                 color:#172033;
-                font-size:18px;
+                font-size:17px;
                 font-weight:700;
             ">
-                3 changes found
+                Acme Master Agreement
             </div>
-            """,
-            unsafe_allow_html=True
-        )
 
-        changes = [
-            {
-                "term": "Payment Terms",
-                "old": "Net 45 days",
-                "new": "Net 30 days",
-                "explanation": "Payment is now due 15 days earlier.",
-                "section": "§6.1 — Payment Terms",
-            },
-            {
-                "term": "Termination Notice",
-                "old": "30 days written notice",
-                "new": "60 days written notice",
-                "explanation": "The required notice period has increased.",
-                "section": "§12.2 — Termination",
-            },
-            {
-                "term": "Service Level",
-                "old": "99.5% uptime",
-                "new": "99.9% uptime",
-                "explanation": "The required service uptime has increased.",
-                "section": "§7.2 — Service Levels",
-            },
-        ]
-
-        for index, change in enumerate(changes):
-
-            with st.container(border=True):
-
-                st.markdown(
-                    f"""
-                    <div style="
-                        color:#172033;
-                        font-size:16px;
-                        font-weight:700;
-                    ">
-                        {change["term"]}
-                    </div>
-
-                    <div style="
-                        color:#64748B;
-                        font-size:12px;
-                        margin-top:5px;
-                    ">
-                        {change["section"]}
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-                value_col1, value_col2 = st.columns(2)
-
-                with value_col1:
-
-                    st.html(
-                        f"""
-                        <div style="
-                            background:#F8FAFC;
-                            border:1px solid #E2E8F0;
-                            border-radius:8px;
-                            padding:13px;
-                            margin-top:14px;
-                        ">
-                            <div style="
-                                color:#94A3B8;
-                                font-size:11px;
-                                font-weight:700;
-                            ">
-                                VERSION 1
-                            </div>
-
-                            <div style="
-                                color:#172033;
-                                font-size:14px;
-                                font-weight:600;
-                                margin-top:6px;
-                            ">
-                                {change["old"]}
-                            </div>
-                        </div>
-                        """
-                    )
-
-                with value_col2:
-
-                    st.html(
-                        f"""
-                        <div style="
-                            background:#F8FAFC;
-                            border:1px solid #E2E8F0;
-                            border-radius:8px;
-                            padding:13px;
-                            margin-top:14px;
-                        ">
-                            <div style="
-                                color:#94A3B8;
-                                font-size:11px;
-                                font-weight:700;
-                            ">
-                                VERSION 2
-                            </div>
-
-                            <div style="
-                                color:#172033;
-                                font-size:14px;
-                                font-weight:600;
-                                margin-top:6px;
-                            ">
-                                {change["new"]}
-                            </div>
-                        </div>
-                        """
-                    )
-
-                st.markdown(
-                    f"""
-                    <div style="
-                        color:#64748B;
-                        font-size:13px;
-                        margin-top:12px;
-                    ">
-                        {change["explanation"]}
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-                if st.button(
-                    "View Source",
-                    key=f"compare_source_{index}"
-                ):
-
-                    st.session_state.compare_source = change
-                    st.rerun()
-
-        # ----------------------------------------------------
-        # SOURCE
-        # ----------------------------------------------------
-
-        if st.session_state.compare_source is not None:
-
-            source = st.session_state.compare_source
-
-            st.html(
-                f"""
-                <div style="
-                    background:#FFFFFF;
-                    border:1px solid #DFE7F2;
-                    border-radius:12px;
-                    padding:20px;
-                    margin-top:20px;
-                ">
-
-                    <div style="
-                        color:#2563EB;
-                        font-size:12px;
-                        font-weight:700;
-                    ">
-                        SOURCE
-                    </div>
-
-                    <div style="
-                        color:#172033;
-                        font-size:15px;
-                        font-weight:700;
-                        margin-top:6px;
-                    ">
-                        {contract_compare}
-                    </div>
-
-                    <div style="
-                        color:#64748B;
-                        font-size:12px;
-                        margin-top:5px;
-                    ">
-                        {source["section"]}
-                    </div>
-
-                    <div style="
-                        color:#475569;
-                        font-size:14px;
-                        line-height:1.7;
-                        margin-top:15px;
-                    ">
-                        Version 1: <strong>{source["old"]}</strong>
-                        <br><br>
-                        Version 2: <strong>{source["new"]}</strong>
-                    </div>
-
-                </div>
-                """,
-            )
-
-            if st.button(
-                "Close Source",
-                key="close_compare_source"
-            ):
-
-                st.session_state.compare_source = None
-                st.rerun()
-
-# ============================================================
-# ASK AI
-# ============================================================
-
-elif st.session_state.page == "Ask AI":
-
-    st.markdown(
-        '<div class="page-title">Ask AI</div>',
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        '<div class="page-subtitle">Ask questions about your contracts.</div>',
-        unsafe_allow_html=True
-    )
-
-    # --------------------------------------------------------
-    # CONTRACT SELECTOR
-    # --------------------------------------------------------
-
-    contract_qa = st.selectbox(
-        "Contract",
-        [
-            "Acme Master Agreement",
-            "XYZ Vendor Agreement"
-        ],
-        key="qa_contract"
-    )
-
-    st.write("")
-
-    # --------------------------------------------------------
-    # EXAMPLE QUESTIONS
-    # --------------------------------------------------------
-
-    st.markdown(
-        """
-        <div style="
-            color:#64748B;
-            font-size:13px;
-            font-weight:600;
-            margin-bottom:10px;
-        ">
-            Try asking
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    example_col1, example_col2, example_col3 = st.columns(3)
-
-    with example_col1:
-        if st.button(
-            "When does this contract expire?",
-            key="qa_example_expiry"
-        ):
-            st.session_state.qa_messages.append(
-                {
-                    "role": "user",
-                    "text": "When does this contract expire?"
-                }
-            )
-            st.session_state.qa_messages.append(
-                {
-                    "role": "assistant",
-                    "text": "The contract expires on December 31, 2026.",
-                    "source": "§12.1 — Term · Page 18"
-                }
-            )
-
-            st.rerun()
-
-    with example_col2:
-        if st.button(
-            "What are the payment terms?",
-            key="qa_example_payment"
-        ):
-            st.session_state.qa_messages.append(
-                {
-                    "role": "user",
-                    "text": "What are the payment terms?"
-                }
-            )
-            st.session_state.qa_messages.append(
-                {
-                    "role": "assistant",
-                    "text": "Payment is due within 30 days of receiving an invoice.",
-                    "source": "§6.1 — Payment Terms · Page 9"
-                }
-            )
-            st.rerun()
-
-    with example_col3:
-        if st.button(
-            "What must the vendor do?",
-            key="qa_example_vendor"
-        ):
-            st.session_state.qa_messages.append(
-                {
-                    "role": "user",
-                    "text": "What must the vendor do?"
-                }
-            )
-            st.session_state.qa_messages.append(
-                {
-                    "role": "assistant",
-                    "text": "The vendor must maintain the required service level and provide incident response within 24 hours.",
-                    "source": "§7.2 — Service Levels · Page 14"
-                }
-            )
-            st.rerun()
-
-    st.write("")
-
-    # --------------------------------------------------------
-    # CONVERSATION
-    # --------------------------------------------------------
-
-    for index, message in enumerate(st.session_state.qa_messages):
-
-        if message["role"] == "user":
-
-            st.html(
-                f"""
-                <div style="
-                    background:#EAF2FF;
-                    border-radius:12px;
-                    padding:13px 16px;
-                    margin-top:14px;
-                    margin-left:15%;
-                    color:#172033;
-                    font-size:14px;
-                ">
-                    <strong>You</strong>
-                    <div style="margin-top:6px;">
-                        {message["text"]}
-                    </div>
-                </div>
-                """
-            )
-
-        else:
-
-            st.html(
-                f"""
-                <div style="
-                    background:#FFFFFF;
-                    border:1px solid #DFE7F2;
-                    border-radius:12px;
-                    padding:16px;
-                    margin-top:12px;
-                    margin-right:10%;
-                ">
-                    <div style="
-                        color:#2563EB;
-                        font-size:12px;
-                        font-weight:700;
-                    ">
-                        CONTRACTLENS
-                    </div>
-
-                    <div style="
-                        color:#172033;
-                        font-size:14px;
-                        line-height:1.7;
-                        margin-top:7px;
-                    ">
-                        {message["text"]}
-                    </div>
-
-                    <div style="
-                        color:#64748B;
-                        font-size:12px;
-                        margin-top:12px;
-                    ">
-                        Source: {message.get("source", "Contract text")}
-                    </div>
-                </div>
-                """
-            )
-
-            if st.button(
-                "View Source",
-                key=f"qa_source_{index}"
-            ):
-                st.session_state.qa_source = message
-                st.rerun()
-
-    # --------------------------------------------------------
-    # SOURCE
-    # --------------------------------------------------------
-
-    if st.session_state.qa_source is not None:
-
-        source = st.session_state.qa_source
-
-        st.html(
-            f"""
-            <div style="
-                background:#FFFFFF;
-                border:1px solid #DFE7F2;
-                border-radius:12px;
-                padding:20px;
-                margin-top:20px;
-            ">
-
-                <div style="
-                    color:#2563EB;
-                    font-size:12px;
-                    font-weight:700;
-                ">
-                    SOURCE
-                </div>
-
-                <div style="
-                    color:#172033;
-                    font-size:15px;
-                    font-weight:700;
-                    margin-top:6px;
-                ">
-                    {contract_qa}
-                </div>
-
-                <div style="
-                    color:#64748B;
-                    font-size:12px;
-                    margin-top:5px;
-                ">
-                    {source["source"]}
-                </div>
-
-                <div style="
-                    color:#475569;
-                    font-size:14px;
-                    line-height:1.7;
-                    margin-top:15px;
-                ">
-                    Supporting contract content used for this answer.
-                </div>
-
-            </div>
-            """
-        )
-
-        if st.button(
-            "Close Source",
-            key="close_qa_source"
-        ):
-            st.session_state.qa_source = None
-            st.rerun()
-
-    # --------------------------------------------------------
-    # QUESTION INPUT
-    # --------------------------------------------------------
-
-    question = st.text_input(
-        "Ask a question",
-        placeholder="e.g. What are the vendor's obligations?",
-        key="qa_question"
-    )
-
-    if st.button("Ask →", key="ask_question"):
-
-        if question.strip():
-
-            st.session_state.qa_messages.append(
-                {
-                    "role": "user",
-                    "text": question
-                }
-            )
-
-            from agent.qa import answer_question
-
-            contract_text = st.session_state.get("contract_text", "")
-
-            if contract_text:
-                with st.spinner("Thinking..."):
-                    answer = answer_question(question, contract_text)
-
-                st.session_state.qa_messages.append(
-                    {
-                        "role": "assistant",
-                        "text": answer
-                    }
-                )
-            else:
-                st.session_state.qa_messages.append(
-                    {
-                        "role": "assistant",
-                        "text": "Please analyze a contract first."
-                    }
-                )
-
-            st.rerun()
-
-
-# ============================================================
-# CONTRACT OVERVIEW PLACEHOLDER
-# ============================================================
-
-elif st.session_state.page == "Contract Overview":
-
-    # --------------------------------------------------------
-    # BACK BUTTON
-    # --------------------------------------------------------
-
-    if st.button("←  Contracts", key="back_contracts"):
-        st.session_state.page = "Contracts"
-        st.rerun()
-
-    st.markdown(
-        '<div class="page-title">Acme Master Agreement</div>',
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        '<div class="page-subtitle">Service Agreement · Acme Corp ↔ Vendor X</div>',
-        unsafe_allow_html=True
-    )
-
-    # --------------------------------------------------------
-    # CONTRACT HEADER
-    # --------------------------------------------------------
-
-    header_col1, header_col2 = st.columns([5, 1])
-
-    with header_col1:
-        st.markdown(
-            """
             <div style="
                 color:#64748B;
                 font-size:13px;
                 margin-top:5px;
             ">
-                Contract status
-                <span style="
-                    background:#E8F8F1;
-                    color:#15803D;
-                    padding:5px 10px;
-                    border-radius:20px;
-                    font-size:11px;
-                    font-weight:700;
-                    margin-left:8px;
-                ">
-                    Active
-                </span>
+                Version 1 ↔ Version 2
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    with header_col2:
-        if st.button(
-            "View Source",
-            key="overview_source"
-        ):
-            st.session_state.show_source = True
-            st.rerun()
+        st.markdown('<div style="height:18px;"></div>', unsafe_allow_html=True)
 
-    # --------------------------------------------------------
-    # CONTRACT DETAILS
-    # --------------------------------------------------------
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.markdown("**Version 1**")
+            st.markdown(
+                '<div style="color:#64748B;font-size:13px;">Original contract</div>',
+                unsafe_allow_html=True
+            )
+
+        with col2:
+            st.markdown("**Version 2**")
+            st.markdown(
+                '<div style="color:#64748B;font-size:13px;">Updated contract</div>',
+                unsafe_allow_html=True
+            )
+
+    st.markdown('<div style="height:22px;"></div>', unsafe_allow_html=True)
 
     st.markdown(
         """
-        <div class="section-title" style="margin-top:30px;">
-            CONTRACT DETAILS
+        <div style="
+            background:#EFF6FF;
+            border:1px solid #BFDBFE;
+            border-radius:12px;
+            padding:16px;
+            color:#1E3A8A;
+            font-size:14px;
+        ">
+            <strong>3 important changes found</strong><br>
+            Payment terms, termination notice, and service level requirements were changed.
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    detail_col1, detail_col2 = st.columns(2)
+    st.markdown('<div style="height:18px;"></div>', unsafe_allow_html=True)
 
-    with detail_col1:
+    changes = [
+        {
+            "term": "Payment Terms",
+            "old": "Net 45 days",
+            "new": "Net 30 days",
+            "explanation": "Payment is now due 15 days earlier.",
+            "section": "§6.1 — Payment Terms",
+        },
+        {
+            "term": "Termination Notice",
+            "old": "30 days written notice",
+            "new": "60 days written notice",
+            "explanation": "The required notice period has increased.",
+            "section": "§12.2 — Termination",
+        },
+        {
+            "term": "Service Level",
+            "old": "99.5% uptime",
+            "new": "99.9% uptime",
+            "explanation": "The required service uptime has increased.",
+            "section": "§7.2 — Service Levels",
+        },
+    ]
 
-        st.markdown(
-            """
-            <div class="metric-card" style="margin-bottom:15px;">
-                <div class="metric-label">Parties</div>
+    for change in changes:
+
+        with st.container(border=True):
+
+            st.markdown(
+                f"""
                 <div style="
                     color:#172033;
-                    font-size:15px;
-                    font-weight:600;
-                    margin-top:8px;
-                ">
-                    Acme Corp ↔ Vendor X
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.markdown(
-            """
-            <div class="metric-card" style="margin-bottom:15px;">
-                <div class="metric-label">Effective Date</div>
-                <div style="
-                    color:#172033;
-                    font-size:15px;
-                    font-weight:600;
-                    margin-top:8px;
-                ">
-                    Jan 1, 2026
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.markdown(
-            """
-            <div class="metric-card">
-                <div class="metric-label">Renewal</div>
-                <div style="
-                    color:#172033;
-                    font-size:15px;
-                    font-weight:600;
-                    margin-top:8px;
-                ">
-                    Automatically renews annually
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    with detail_col2:
-
-        st.markdown(
-            """
-            <div class="metric-card" style="margin-bottom:15px;">
-                <div class="metric-label">Contract Type</div>
-                <div style="
-                    color:#172033;
-                    font-size:15px;
-                    font-weight:600;
-                    margin-top:8px;
-                ">
-                    Service Agreement
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.markdown(
-            """
-            <div class="metric-card" style="margin-bottom:15px;">
-                <div class="metric-label">Expiration Date</div>
-                <div style="
-                    color:#172033;
-                    font-size:15px;
-                    font-weight:600;
-                    margin-top:8px;
-                ">
-                    Dec 31, 2026
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.markdown(
-            """
-            <div class="metric-card">
-                <div class="metric-label">Termination</div>
-                <div style="
-                    color:#172033;
-                    font-size:15px;
-                    font-weight:600;
-                    margin-top:8px;
-                ">
-                    60 days written notice
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-    # --------------------------------------------------------
-    # SOURCE
-    # --------------------------------------------------------
-
-    if st.session_state.show_source:
-
-        st.html(
-            """
-            <div style="
-                background:#FFFFFF;
-                border:1px solid #DFE7F2;
-                border-radius:12px;
-                padding:20px;
-                margin-top:20px;
-            ">
-                <div style="
-                    color:#2563EB;
-                    font-size:12px;
-                    font-weight:700;
-                    margin-bottom:6px;
-                ">
-                    SOURCE
-                </div>
-
-                <div style="
-                    color:#172033;
-                    font-size:15px;
+                    font-size:16px;
                     font-weight:700;
                 ">
-                    Acme Master Agreement
+                    {change["term"]}
                 </div>
 
                 <div style="
@@ -2796,126 +2066,228 @@ elif st.session_state.page == "Contract Overview":
                     font-size:12px;
                     margin-top:5px;
                 ">
-                    §12.1 — Renewal · Page 18
+                    {change["section"]}
+                </div>
+
+                <div style="
+                    margin-top:15px;
+                    font-size:14px;
+                    line-height:1.7;
+                ">
+                    <strong>Before:</strong> {change["old"]}<br>
+                    <strong>After:</strong> {change["new"]}
                 </div>
 
                 <div style="
                     color:#475569;
-                    font-size:14px;
-                    line-height:1.7;
-                    margin-top:15px;
+                    font-size:13px;
+                    margin-top:10px;
                 ">
-                    "The agreement shall automatically renew for successive
-                    one-year periods unless either party provides written
-                    notice of non-renewal at least sixty (60) days prior
-                    to the expiration date."
+                    {change["explanation"]}
                 </div>
-            </div>
-            """,
+                """,
+                unsafe_allow_html=True
+            )
+
+elif st.session_state.page == "Contract Overview":
+
+    analysis = st.session_state.get("contract_analysis")
+
+    if not analysis:
+        st.info("Analyze a contract first to view its overview.")
+
+    else:
+        info = analysis.get("contract_info", {})
+        financial = analysis.get("financial_terms", {})
+        parties = info.get("parties", [])
+        review_items = analysis.get("review_items", [])
+        obligations = analysis.get("obligations", [])
+
+        contract_type = info.get("contract_type", "Not specified")
+        effective_date = info.get("effective_date", "Not specified")
+        expiration_date = info.get("expiration_date", "Not specified")
+        renewal_terms = info.get("renewal_terms", "Not specified")
+        termination = info.get("termination_conditions", "Not specified")
+
+        st.markdown(
+            f'<div class="page-title">{contract_type}</div>',
+            unsafe_allow_html=True
         )
 
-        if st.button("Close Source", key="close_overview_source"):
-            st.session_state.show_source = False
+        st.markdown(
+            f'<div class="page-subtitle">AI-analyzed contract · '
+            f'{(" ↔ ".join(parties) if parties else "Parties not specified")}</div>',
+            unsafe_allow_html=True
+        )
+
+        if st.button("←  Contracts", key="back_contracts"):
+            st.session_state.page = "Contracts"
             st.rerun()
 
-    # --------------------------------------------------------
-    # SUMMARY
-    # --------------------------------------------------------
-
-    st.markdown(
-        """
-        <div class="section-title" style="margin-top:32px;">
-            SUMMARY
-        </div>
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #DFE7F2;
-            border-radius:12px;
-            padding:20px;
-            color:#64748B;
-            font-size:14px;
-            line-height:1.7;
-        ">
-            This agreement governs the services provided by Vendor X
-            to Acme Corp, including service levels, reporting obligations,
-            payment terms, and termination conditions.
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # --------------------------------------------------------
-    # NEEDS ATTENTION
-    # --------------------------------------------------------
-
-    st.markdown(
-        """
-        <div class="section-title" style="margin-top:32px;">
-            NEEDS ATTENTION
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    attention_col1, attention_col2 = st.columns(2)
-
-    with attention_col1:
         st.markdown(
-            """
-            <div class="attention-card yellow-card">
-                <div class="attention-title">
-                    3 clauses require attention
+            '<div class="section-title" style="margin-top:30px;">CONTRACT DETAILS</div>',
+            unsafe_allow_html=True
+        )
+
+        detail_col1, detail_col2 = st.columns(2)
+
+        with detail_col1:
+            st.markdown(
+                f"""
+                <div class="metric-card" style="margin-bottom:15px;">
+                    <div class="metric-label">Parties</div>
+                    <div style="color:#172033;font-size:15px;font-weight:600;margin-top:8px;">
+                        {(" ↔ ".join(parties) if parties else "Not specified")}
+                    </div>
                 </div>
-                <div class="attention-text">
-                    Review flagged contract sections.
+
+                <div class="metric-card" style="margin-bottom:15px;">
+                    <div class="metric-label">Effective Date</div>
+                    <div style="color:#172033;font-size:15px;font-weight:600;margin-top:8px;">
+                        {effective_date}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">Renewal</div>
+                    <div style="color:#172033;font-size:15px;font-weight:600;margin-top:8px;">
+                        {renewal_terms}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with detail_col2:
+            st.markdown(
+                f"""
+                <div class="metric-card" style="margin-bottom:15px;">
+                    <div class="metric-label">Contract Type</div>
+                    <div style="color:#172033;font-size:15px;font-weight:600;margin-top:8px;">
+                        {contract_type}
+                    </div>
+                </div>
+
+                <div class="metric-card" style="margin-bottom:15px;">
+                    <div class="metric-label">Expiration Date</div>
+                    <div style="color:#172033;font-size:15px;font-weight:600;margin-top:8px;">
+                        {expiration_date}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">Termination</div>
+                    <div style="color:#172033;font-size:15px;font-weight:600;margin-top:8px;">
+                        {termination}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        st.markdown(
+            '<div class="section-title" style="margin-top:32px;">FINANCIAL TERMS</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f"""
+            <div class="metric-card">
+                <div class="metric-label">Payment Terms</div>
+                <div style="color:#172033;font-size:15px;font-weight:600;margin-top:8px;">
+                    {financial.get("payment_terms", "Not specified")}
+                </div>
+
+                <div class="metric-label" style="margin-top:18px;">Fees</div>
+                <div style="color:#172033;font-size:15px;font-weight:600;margin-top:8px;">
+                    {financial.get("fees", "Not specified")}
+                </div>
+
+                <div class="metric-label" style="margin-top:18px;">Penalties</div>
+                <div style="color:#172033;font-size:15px;font-weight:600;margin-top:8px;">
+                    {financial.get("penalties", "Not specified")}
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    with attention_col2:
         st.markdown(
-            """
-            <div class="attention-card blue-card">
-                <div class="attention-title">
-                    Renewal notice deadline
-                </div>
-                <div class="attention-text">
-                    Sep 28, 2026
+            '<div class="section-title" style="margin-top:32px;">SUMMARY</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f"""
+            <div class="metric-card">
+                <div style="color:#64748B;font-size:14px;line-height:1.7;">
+                    ContractLens identified
+                    <strong>{len(obligations)} obligations</strong>
+                    and
+                    <strong>{len(review_items)} clauses requiring human review</strong>
+                    in this contract.
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    st.write("")
-
-    obligation_col1, obligation_col2 = st.columns([5, 1])
-
-    with obligation_col1:
         st.markdown(
-            """
-            <div style="
-                color:#64748B;
-                font-size:14px;
-                padding-top:10px;
-            ">
-                <strong style="color:#172033;">14 obligations</strong>
-                identified in this contract.
-            </div>
-            """,
+            '<div class="section-title" style="margin-top:32px;">NEEDS ATTENTION</div>',
             unsafe_allow_html=True
         )
 
-    with obligation_col2:
-        if st.button(
-            "View Obligations",
-            key="overview_obligations"
-        ):
-            st.session_state.page = "Obligations"
-            st.rerun()
+        attention_col1, attention_col2 = st.columns(2)
+
+        with attention_col1:
+            st.markdown(
+                f"""
+                <div class="attention-card yellow-card">
+                    <div class="attention-title">
+                        {len(review_items)} clauses require attention
+                    </div>
+                    <div class="attention-text">
+                        Review flagged contract sections.
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with attention_col2:
+            st.markdown(
+                f"""
+                <div class="attention-card blue-card">
+                    <div class="attention-title">
+                        Contract expiration
+                    </div>
+                    <div class="attention-text">
+                        {expiration_date}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        st.write("")
+
+        obligation_col1, obligation_col2 = st.columns([5, 1])
+
+        with obligation_col1:
+            st.markdown(
+                f"""
+                <div style="color:#64748B;font-size:14px;padding-top:10px;">
+                    <strong style="color:#172033;">{len(obligations)} obligations</strong>
+                    identified in this contract.
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with obligation_col2:
+            if st.button("View Obligations", key="overview_obligations"):
+                st.session_state.page = "Obligations"
+                st.rerun()
 
 
 # ============================================================
